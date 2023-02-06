@@ -1,0 +1,366 @@
+{
+	"info": {
+		"_postman_id": "f3108512-892d-4c0b-b95d-fe43440f6f62",
+		"name": "HeadHunter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24067143"
+	},
+	"item": [
+		{
+			"name": "Запрос за компанией",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Артем, привет\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Наличие в ответе поле количество ваканссий\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"open_vacancies\");",
+							"});",
+							"",
+							"pm.test(\"Сравнение значения поля поля id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.items[0].id).to.eql(\"5008932\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(70);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/employers?text={{котик}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"employers"
+					],
+					"query": [
+						{
+							"key": "per_page",
+							"value": "10",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "text",
+							"value": "артем синельщиков",
+							"disabled": true
+						},
+						{
+							"key": "text",
+							"value": "{{котик}}"
+						},
+						{
+							"key": "area",
+							"value": "3",
+							"disabled": true
+						},
+						{
+							"key": "only_with_vacancies",
+							"value": "true",
+							"disabled": true
+						},
+						{
+							"key": "locale",
+							"value": "EN",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение инфы о компании",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Артем, привет\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Наличие в ответе поле количество ваканссий\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"open_vacancies\");",
+							"});",
+							"",
+							"pm.test(\"Сравнение значения поля поля id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(\"5008932\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(70);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest(\"https://api.hh.ru/employers?text=яндекс+практикум\", function (err, response) {",
+							"var yandex_id = response.json().items[0].id;",
+							"pm.collectionVariables.set(\"company_id\", yandex_id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/employers/{{company_id}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"employers",
+						"{{company_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Тестирование пользовательского интерфейса",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.hh.ru/suggests/skill_set?text=Jira&locate=EN&host=hh.ru",
+					"protocol": "https",
+					"host": [
+						"api",
+						"hh",
+						"ru"
+					],
+					"path": [
+						"suggests",
+						"skill_set"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "Jira"
+						},
+						{
+							"key": "locate",
+							"value": "EN"
+						},
+						{
+							"key": "host",
+							"value": "hh.ru"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Запрос для id города",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.hh.ru/suggests/area_leaves?text=нижний",
+					"protocol": "https",
+					"host": [
+						"api",
+						"hh",
+						"ru"
+					],
+					"path": [
+						"suggests",
+						"area_leaves"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "нижний"
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Станции метро в Нижнем Новгороде",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.hh.ru/metro/66",
+					"protocol": "https",
+					"host": [
+						"api",
+						"hh",
+						"ru"
+					],
+					"path": [
+						"metro",
+						"66"
+					],
+					"query": [
+						{
+							"key": "locate",
+							"value": "EN",
+							"disabled": true
+						},
+						{
+							"key": "host",
+							"value": "hh.ru",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Запрос за компанией (QA Studio)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.hh.ru/employers?text=QA studio",
+					"protocol": "https",
+					"host": [
+						"api",
+						"hh",
+						"ru"
+					],
+					"path": [
+						"employers"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "QA studio"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Подробности про QA Studio",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.hh.ru/employers/6017235",
+					"protocol": "https",
+					"host": [
+						"api",
+						"hh",
+						"ru"
+					],
+					"path": [
+						"employers",
+						"6017235"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Все доступные языки на HeadHunter",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "PHPSESSID=r2t5uvjq435r4q7ib3vtdjq120",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.hh.ru/languages?=",
+					"protocol": "https",
+					"host": [
+						"api",
+						"hh",
+						"ru"
+					],
+					"path": [
+						"languages"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "котик",
+			"value": "яндекс практикум",
+			"type": "string"
+		},
+		{
+			"key": "host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "company_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
